@@ -54,6 +54,7 @@ public class UpdateUserForm extends Form {
                    // System.out.println(tfID.getText());
 //                    Event t = new Event(tfID.getText());
                     System.out.println(u.getId());
+                    System.out.println(u.getEmail());
                     System.out.println(u.getUsername());
                     System.out.println("updated account");
                     
