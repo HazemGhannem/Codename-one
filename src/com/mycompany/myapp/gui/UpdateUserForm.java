@@ -56,6 +56,7 @@ public class UpdateUserForm extends Form {
                     System.out.println(u.getId());
                     System.out.println(u.getEmail());
                     System.out.println(u.getUsername());
+                    System.out.println(u.getUsername());
                     System.out.println("updated account");
                     
                     if (ServiceTask.getInstance().UpdateUser(u)) {
