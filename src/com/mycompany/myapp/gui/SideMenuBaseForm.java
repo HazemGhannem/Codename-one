@@ -28,6 +28,9 @@ import com.codename1.ui.Label;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.Layout;
 import com.codename1.ui.util.Resources;
+import com.mycompany.myapp.entities.Pack;
+import com.mycompany.myapp.entities.Plat;
+import com.mycompany.myapp.entities.Promotion;
 import com.mycompany.myapp.gui.LoginForm;
 
 /**
@@ -62,12 +65,14 @@ public abstract class SideMenuBaseForm extends Form {
 
         Container sidemenuTop = BorderLayout.center(profilePicLabel);
         sidemenuTop.setUIID("SidemenuTop");
-        
+        Pack p = new Pack();
+        Plat plat = new Plat();
         getToolbar().addComponentToSideMenu(sidemenuTop);
-        getToolbar().addMaterialCommandToSideMenu("  Dashboard", FontImage.MATERIAL_DASHBOARD,  e -> showOtherForm(res));
-        getToolbar().addMaterialCommandToSideMenu("  Activity", FontImage.MATERIAL_TRENDING_UP,  e -> showOtherForm(res));
-        getToolbar().addMaterialCommandToSideMenu("  Tasks", FontImage.MATERIAL_ACCESS_TIME,  e -> showOtherForm(res));
-        getToolbar().addMaterialCommandToSideMenu("  Account Settings", FontImage.MATERIAL_SETTINGS,  e -> showOtherForm(res));
+        getToolbar().addMaterialCommandToSideMenu("  Promotion", FontImage.MATERIAL_DASHBOARD,  e -> new ListPromotion(res).show());
+        getToolbar().addMaterialCommandToSideMenu("  Coupon", FontImage.MATERIAL_TRENDING_UP,  e -> new ListCouponForm(res).show());
+        getToolbar().addMaterialCommandToSideMenu("  Packs", FontImage.MATERIAL_ACCESS_TIME,  e -> new ListPack(p,res).show());
+        getToolbar().addMaterialCommandToSideMenu("  Category", FontImage.MATERIAL_SETTINGS,  e -> new ListTasksForm(res).show());
+         getToolbar().addMaterialCommandToSideMenu("  Plat", FontImage.MATERIAL_SETTINGS,  e -> new ListPlat(res).show());
         getToolbar().addMaterialCommandToSideMenu("  Logout", FontImage.MATERIAL_EXIT_TO_APP,  e -> new LoginForm(res).show());
     }
     

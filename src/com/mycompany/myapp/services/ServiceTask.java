@@ -10,11 +10,19 @@ import com.codename1.io.ConnectionRequest;
 import com.codename1.io.JSONParser;
 import com.codename1.io.NetworkEvent;
 import com.codename1.io.NetworkManager;
+import com.codename1.ui.Dialog;
+import com.codename1.ui.TextField;
 import com.codename1.ui.events.ActionListener;
+import com.codename1.ui.util.Resources;
 import com.mycompany.myapp.entities.User;
+import com.mycompany.myapp.gui.ProfileForm;
+import com.mycompany.myapp.gui.SessionManager;
+import com.mycompany.myapp.gui.SignIn;
+import com.mycompany.myapp.gui.UserLogin;
 import com.mycompany.myapp.utils.Statics;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -25,13 +33,13 @@ import java.util.Map;
 public class ServiceTask {
 
     public ArrayList<User> User;
-    
-    public static ServiceTask instance=null;
+
+    public static ServiceTask instance = null;
     public boolean resultOK;
     private ConnectionRequest req;
 
-    private ServiceTask() {
-         req = new ConnectionRequest();
+    public ServiceTask() {
+        req = new ConnectionRequest();
     }
 
     public static ServiceTask getInstance() {
@@ -44,15 +52,15 @@ public class ServiceTask {
     public boolean addUsers(User u) {
         System.out.println(u);
         System.out.println("********");
-        String url = Statics.BASE_URL + "register?username=" + u.getUsername() + "&email=" + u.getEmail()+"&Telephone=" +u.getTel()+"&password="+u.getPassword();
-      // String url = Statics.BASE_URL + "create";
+        String url = Statics.BASE_URL + "register?username=" + u.getUsername() + "&email=" + u.getEmail() + "&Telephone=" + u.getTel() + "&password=" + u.getPassword();
+        // String url = Statics.BASE_URL + "create";
         System.out.println("********");
-    
-       req.setUrl(url);
-       
+
+        req.setUrl(url);
+
 //       req.addArgument("username", u.getUsername());
 //       req.addArgument("email", u.getEmail()+"");
-       req.addResponseListener(new ActionListener<NetworkEvent>() {
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
             @Override
             public void actionPerformed(NetworkEvent evt) {
                 resultOK = req.getResponseCode() == 200; //Code HTTP 200 OK
@@ -63,46 +71,43 @@ public class ServiceTask {
         return resultOK;
     }
 
-    public ArrayList<User> parseTasks(String jsonText){
+    public ArrayList<User> parseTasks(String jsonText) {
         try {
-            User =new ArrayList<>();
+            User = new ArrayList<>();
             JSONParser j = new JSONParser();
-            Map<String,Object> tasksListJson = 
-               j.parseJSON(new CharArrayReader(jsonText.toCharArray()));
-            
-            List<Map<String,Object>> list = (List<Map<String,Object>>)tasksListJson.get("root");
-            for(Map<String,Object> obj : list){
+            Map<String, Object> tasksListJson
+                    = j.parseJSON(new CharArrayReader(jsonText.toCharArray()));
+
+            List<Map<String, Object>> list = (List<Map<String, Object>>) tasksListJson.get("root");
+            for (Map<String, Object> obj : list) {
                 User u = new User();
                 float id = Float.parseFloat(obj.get("id").toString());
-                u.setId((int)id);
-                String email= obj.get("email").toString() ;
+                u.setId((int) id);
+                String email = obj.get("email").toString();
                 u.setEmail(email);
                 u.setPassword((obj.get("password").toString()));
-                String Telephone= obj.get("Telephone").toString() ;
+                String Telephone = obj.get("Telephone").toString();
                 u.setTel(Telephone);
-                String Username= obj.get("username").toString() ;
+                String Username = obj.get("username").toString();
                 u.setUsername(Username);
-                
+
 //                    String email= obj.get("email").toString() ;
 //                    float id = Float.parseFloat(obj.get("id").toString());
 //                    String username= obj.get("username").toString() ;
 //                    String password= obj.get("password").toString() ;
 //                    String tel= obj.get("tel").toString() ;
-               
-              
                 User.add(u);
             }
-            
-            
+
         } catch (IOException ex) {
-            
+
         }
         return User;
     }
-    
-    public ArrayList<User> getAllUser(){
+
+    public ArrayList<User> getAllUser() {
         //String url = Statics.BASE_URL+"/tasks/";
-        String url = Statics.BASE_URL+"allusers/";
+        String url = Statics.BASE_URL + "allusers/";
         req.setUrl(url);
         req.setPost(false);
         req.addResponseListener(new ActionListener<NetworkEvent>() {
@@ -115,6 +120,7 @@ public class ServiceTask {
         NetworkManager.getInstance().addToQueueAndWait(req);
         return User;
     }
+
     public boolean deleteUser(User u) {
         String url = Statics.BASE_URL + "Delete/" + u.getId();
 //création de l'URL
@@ -130,8 +136,9 @@ public class ServiceTask {
         System.out.println(resultOK);
         return resultOK;
     }
-        public boolean UpdateUser(User u) {
-        String url = Statics.BASE_URL + "update/" + u.getId()+"?username="+u.getUsername()+"&email="+u.getEmail()+"&Telephone="+u.getTel();
+
+    public boolean UpdateUser(User u) {
+        String url = Statics.BASE_URL + "update/" + u.getId() + "?username=" + u.getUsername() + "&email=" + u.getEmail() + "&Telephone=" + u.getTel();
 //création de l'URL
         req.setUrl(url);// Insertion de l'URL de notre demande de connexion
         req.addResponseListener(new ActionListener<NetworkEvent>() {
@@ -145,4 +152,80 @@ public class ServiceTask {
         System.out.println(resultOK);
         return resultOK;
     }
+
+    public void signin(TextField email, TextField password, Resources res) {
+
+        String url = Statics.BASE_URL + "loginUser/json?email=" + email.getText().toString() + "&password=" + password.getText().toString();
+        req = new ConnectionRequest(url, false); //false ya3ni url mazlt matba3thtich lel server
+        req.setUrl(url);
+
+        req.addResponseListener((e) -> {
+
+            JSONParser j = new JSONParser();
+
+            String json = new String(req.getResponseData()) + "";
+            
+            // get field value from JSONObject using get() method  
+              
+            ArrayList<String> c = new ArrayList<String>();
+            c.add(json);
+            //System.out.println(c);
+            String element = c.get(0);
+            System.out.println("======start===========");
+            //System.out.println(element);
+            String role = "ROLE_ADMIN";
+            int i = element.indexOf(role);
+//            if(i>0)
+//                System.out.println("done");
+//            else 
+//                System.out.println("nope");
+               //String di=element.substring(87, 97);
+               // System.out.println(di);
+            
+        
+        System.out.println("======end===========");
+
+        try {
+
+            if (json.equals("failed")) {
+                Dialog.show("Echec d'authentification", "Email ou mot de passe éronné", "OK", null);
+
+            } else {
+                //System.out.println("data ==" + json);
+
+                Map<String, Object> user = j.parseJSON(new CharArrayReader(json.toCharArray()));
+
+                //Session 
+                float id = Float.parseFloat(user.get("id").toString());
+                SessionManager.setId((int) id);//jibt id ta3 user ly3ml login w sajltha fi session ta3i
+                //SessionManager.setNom(user.get("nom").toString());
+                SessionManager.setUsername(user.get("username").toString());
+                SessionManager.setTel(user.get("Telephone").toString());
+                SessionManager.setEmail(user.get("email").toString());
+                SessionManager.setPassowrd(user.get("password").toString());
+
+                //photo 
+                if ((user.size() > 0)&&(i>0) ) { // l9a user
+
+                    new ProfileForm(res).show();
+
+                }else{
+                new UserLogin(res).show();
+                }
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    );
+
+        //ba3d execution ta3 requete ely heya url nestanaw response ta3 server.
+    NetworkManager.getInstance ()
+
+.addToQueueAndWait(req);
+    }
+
 }

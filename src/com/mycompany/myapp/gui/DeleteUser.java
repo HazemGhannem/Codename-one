@@ -9,7 +9,6 @@ import com.codename1.ui.Button;
 import com.codename1.ui.Command;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Form;
-import com.codename1.ui.TextField;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BoxLayout;
@@ -54,14 +53,9 @@ public class DeleteUser extends Form {
                     }
                         
                 }
-               
-            
             //}
         });
         addAll( btnSubmit,btnret);
 //        this.getToolbar().addMaterialCommandToLeftBar("", FontImage.MATERIAL_ARROW_BACK, e -> previous.showBack());
-    }
-    
-    
-    
+    }  
 }

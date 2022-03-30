@@ -19,6 +19,8 @@ import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.io.NetworkEvent;
 import com.mycompany.myapp.gui.LoginForm;
 import com.mycompany.myapp.gui.LoginForm;
+import com.mycompany.myapp.gui.SignIn;
+import com.mycompany.myapp.gui.login;
 import java.io.IOException;
 
 
@@ -62,7 +64,7 @@ public class MyApplication {
         }
          
        new LoginForm(theme).show();
-       
+             
     }
 
     public void stop() {

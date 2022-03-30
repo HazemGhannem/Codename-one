@@ -50,8 +50,10 @@
         <val key="Container.press#padding" value="0,0,0,0" />
         <val key="Container.press#transparency" value="0" />
         <val key="CreateNewAccountButton.align" value="4" />
-        <val key="CreateNewAccountButton.bgColor" value="4bc2ff" />
-        <val key="CreateNewAccountButton.fgColor" value="ffffff" />
+        <val key="CreateNewAccountButton.bgColor" value="ffffff" />
+        <gradient key="CreateNewAccountButton.bgGradient" color1="16751001" color2="3407871" posX="0.5" posY="0.5" radius="1.0" />
+        <val key="CreateNewAccountButton.bgType" value="6" />
+        <val key="CreateNewAccountButton.fgColor" value="0" />
         <font key="CreateNewAccountButton.font" type="ttf" face="0" style="0" size="0" name="native:MainRegular" family="native:MainRegular" sizeSettings="3" actualSize="2.5" />
         <val key="CreateNewAccountButton.press#align" value="4" />
         <val key="CreateNewAccountButton.press#bgColor" value="4bc2ff" />
@@ -60,10 +62,12 @@
         <val key="CreateNewAccountButton.press#transparency" value="0" />
         <val key="CreateNewAccountButton.sel#align" value="4" />
         <val key="CreateNewAccountButton.sel#bgColor" value="4bc2ff" />
+        <val key="CreateNewAccountButton.sel#bgImage" value="gradient-overlay.png" />
+        <val key="CreateNewAccountButton.sel#bgType" value="1" />
         <val key="CreateNewAccountButton.sel#fgColor" value="ffffff" />
         <font key="CreateNewAccountButton.sel#font" type="ttf" face="0" style="0" size="0" name="native:MainRegular" family="native:MainRegular" sizeSettings="3" actualSize="2.5" />
         <val key="CreateNewAccountButton.sel#transparency" value="0" />
-        <val key="CreateNewAccountButton.transparency" value="0" />
+        <val key="CreateNewAccountButton.transparency" value="4" />
         <val key="FloatingActionButton.bgColor" value="ffffff" />
         <val key="FloatingActionButton.fgColor" value="0" />
         <val key="FloatingActionButton.press#bgColor" value="6aaff" />

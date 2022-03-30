@@ -19,9 +19,15 @@
 
 package com.mycompany.myapp.gui;
 
+import com.codename1.io.Storage;
+import com.codename1.social.FacebookConnect;
+import com.codename1.social.GoogleConnect;
+import com.codename1.social.Login;
+import com.codename1.social.LoginCallback;
 import com.mycompany.myapp.gui.WalkthruForm;
 import com.mycompany.myapp.gui.SginForm;
 import com.codename1.ui.Button;
+import com.codename1.ui.Command;
 import com.codename1.ui.Container;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
@@ -31,11 +37,14 @@ import com.codename1.ui.Image;
 import com.codename1.ui.Label;
 import com.codename1.ui.TextField;
 import com.codename1.ui.Toolbar;
+import com.codename1.ui.events.ActionEvent;
+import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.util.Resources;
 import com.mycompany.myapp.entities.User;
+import com.mycompany.myapp.services.ServiceTask;
 
 /**
  * The Login form
@@ -43,6 +52,8 @@ import com.mycompany.myapp.entities.User;
  * @author Shai Almog
  */
 public class LoginForm extends Form {
+    
+    
     public LoginForm(Resources theme) {
         super(new BorderLayout(BorderLayout.CENTER_BEHAVIOR_CENTER_ABSOLUTE));
         setUIID("LoginForm");
@@ -59,9 +70,9 @@ public class LoginForm extends Form {
         Label profilePicLabel = new Label(profilePic, "ProfilePic");
         profilePicLabel.setMask(mask.createMask());
         
-        TextField login = new TextField("", "Email", 20, TextField.EMAILADDR) ;
+        TextField email = new TextField("", "Email", 20, TextField.EMAILADDR) ;
         TextField password = new TextField("", "Password", 20, TextField.PASSWORD) ;
-        login.getAllStyles().setMargin(LEFT, 0);
+        email.getAllStyles().setMargin(LEFT, 0);
         password.getAllStyles().setMargin(LEFT, 0);
         
         
@@ -76,24 +87,97 @@ public class LoginForm extends Form {
         loginButton.setUIID("LoginButton");
         
         loginButton.addActionListener(e -> {
-            if (login.getText().equals("" ) && password.getText().equals("" )  ){
-            Toolbar.setGlobalToolbar(false);
-            new WalkthruForm(theme).show();
-            Toolbar.setGlobalToolbar(true);
-            }else{
-                //System.out.println("Wrong Password");
-                Dialog.show("conf", "Wrong Email or Password","ok", "cancel");
-            }
+            
+                       ServiceTask.getInstance().signin(email,password,theme);
         });
         
         
         Button createNewAccount = new Button("CREATE NEW ACCOUNT");
-        createNewAccount.setUIID("CreateNewAccountButton");
+        createNewAccount.setUIID("LoginButton");
         createNewAccount.addActionListener(e -> {
             Toolbar.setGlobalToolbar(false);
             new SginForm(theme).show();
             Toolbar.setGlobalToolbar(true);
         });
+         Button d = new Button("fb");
+        d.setUIID("LoginButton");
+        Login fb = FacebookConnect.getInstance();
+        String clientId = "1171134366245722";
+                String redirectURI = "http://127.0.0.1:8000/";
+                String clientSecret = "d2eefcd6e0f4c03b3cd60ffef344f851";
+                fb.setClientId(clientId);
+                fb.setRedirectURI(redirectURI);
+                fb.setClientSecret(clientSecret);
+                fb.setCallback(new LoginCallback() {
+                    public void loginSuccessful() {
+                System.out.println("google worked");
+                // we can now start fetching stuff from Google+!
+               new ProfileForm(theme).show();
+            }
+
+            public void loginFailed(String errorMessage) {
+                System.out.println("login failed");
+            }
+        });
+                d.addActionListener(e -> {
+                if(!fb.isUserLoggedIn()){
+                    fb.doLogin();
+                }else{
+                   String token = fb.getAccessToken().getToken();
+                }
+
+            });
+        
+     
+       
+       //
+      
+       
+        
+        
+        
+        Button logingglButton = new Button("LOGIN GOOGLE");
+        logingglButton.setUIID("LoginButton");
+        
+          Login gc = GoogleConnect.getInstance();
+        gc.setClientId("424141229670-ku7e3q8hcsnfdj9c5vo3qupf16lgav84.apps.googleusercontent.com");
+        gc.setRedirectURI("http://127.0.0.1:8000/");
+        gc.setClientSecret("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");
+         gc.setCallback(new LoginCallback() {
+            public void loginSuccessful() {
+                System.out.println("google worked");
+                // we can now start fetching stuff from Google+!
+               new ProfileForm(theme).show();
+            }
+
+            public void loginFailed(String errorMessage) {
+                System.out.println("login failed");
+            }
+        });
+         
+
+// trigger the login if not already logged in
+        logingglButton.addActionListener(e -> {
+        if (!gc.isUserLoggedIn()) {
+            gc.doLogin();
+           
+            System.out.println("di");
+           // new ProfileForm(theme).show();
+        } else {
+            // get the token and now you can query the Google API 
+            String token = gc.getAccessToken().getToken();
+            Storage.getInstance().writeObject("token", token);
+            new ProfileForm(theme).show();
+            System.out.println("hama");
+            //Dialog.show("failed", "login err", new Command("OK"));
+            
+            // NOTE: On Android, this token will be null unless you provide valid
+            // client ID and secrets.
+        }
+       // new ProfileForm(theme).show();
+       
+        });
+          
           
         
         // We remove the extra space for low resolution devices so things fit better
@@ -109,12 +193,14 @@ public class LoginForm extends Form {
                 welcome,
                 profilePicLabel,
                 spaceLabel,
-                BorderLayout.center(login).
+                BorderLayout.center(email).
                         add(BorderLayout.WEST, loginIcon),
                 BorderLayout.center(password).
                         add(BorderLayout.WEST, passwordIcon),
                 loginButton,
-                createNewAccount
+                createNewAccount,
+                logingglButton,
+                d
               
         );
         add(BorderLayout.CENTER, by);

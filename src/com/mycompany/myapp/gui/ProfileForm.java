@@ -25,11 +25,13 @@ import com.codename1.components.SpanButton;
 import com.codename1.components.SpanLabel;
 import com.codename1.ui.Button;
 import com.codename1.ui.Container;
+import com.codename1.ui.EncodedImage;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Graphics;
 import com.codename1.ui.Image;
 import com.codename1.ui.Label;
 import com.codename1.ui.Toolbar;
+import com.codename1.ui.URLImage;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
@@ -50,6 +52,11 @@ public class ProfileForm extends SideMenuBaseForm {
         Toolbar tb = getToolbar();
         tb.setTitleCentered(false);
         Image profilePic = res.getImage("user-picture.jpg");
+        EncodedImage placeholder = EncodedImage.createFromImage(Image.createImage(50, 50 / 5, 0xffff0000), true);
+        URLImage background = URLImage.createToStorage(placeholder, "400px-AGameOfThrones.jpg",
+        "http://awoiaf.westeros.org/images/thumb/9/93/AGameOfThrones.jpg/400px-AGameOfThrones.jpg");
+        
+        
         Image mask = res.getImage("round-mask.png");
         profilePic = profilePic.fill(mask.getWidth(), mask.getHeight());
         Label profilePicLabel = new Label(profilePic, "ProfilePicTitle");
@@ -99,7 +106,9 @@ public class ProfileForm extends SideMenuBaseForm {
         List.setScrollableY(true);
        
         for (User user : ServiceTask.getInstance().getAllUser()) {
-            MultiButton mb = new MultiButton(user.toString());
+            MultiButton mb = new MultiButton("Email: "+user.getEmail().toString()+
+                    " username: "+user.getUsername().toString()+
+                    " Telephone: "+user.getTel().toString());
             //System.out.println(user.getId());
         Button update = new Button("update");
         update.setUIID("update");
